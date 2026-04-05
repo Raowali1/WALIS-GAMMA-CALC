@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fractional Polynomial Derivative/Integration</title>
+
+    <style>
+        .warning {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .warning2 {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .math-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .fx-label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .terms-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .term {
+            display: flex;
+            align-items: center;
+        }
+
+        .coeff {
+            width: 50px;
+        }
+
+        .power {
+            width: 27px;
+            font-size: 0.75em;
+            vertical-align: super;
+            position: relative;
+            top: -8px;
+        }
+
+        .x-symbol {
+            font-style: italic;
+            margin: 0 4px;
+        }
+
+        .add-btn {
+            height: 30px;
+        }
+
+        .math-label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .math-label input {
+            width: 30px;
+            vertical-align: super;
+            font-size: 0.75em;
+            position: relative;
+            top: -6px;
+        }
+
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body>
+
+<p class="warning">
+    Warning: Exponents must be within (-140, 140)
+</p>
+<p class="warning2">
+    Warning: Coefficients must be within (-100,000, 100,000)
+</p>
+
+<h2>Fractional Derivative/Integration of a Polynomial</h2>
+
+<div class="math-row">
+    <div class="fx-label">
+        f(x) =
+    </div>
+
+    <div class="terms-row" id="terms-container"></div>
+</div>
+
+<br>
+
+<div class="math-label">
+    f<sup>(</sup>
+    <input type="number" id="order" step="any">
+    <sup>)</sup>(x) =
+</div>
+
+<button onclick="calculate()">Calculate</button>
+
+<h3 id="result"></h3>
+
+<script>
+
+// ---------------- Gamma Function ----------------
+function gamma(z) {
+    const g = 7;
+    const p = [
+        0.99999999999980993,
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.984369578019571e-6,
+        1.5056327351493116e-7
+    ];
+
+    if (z < 0.5) {
+        return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
+    }
+
+    z -= 1;
+    let x = p[0];
+    for (let i = 1; i < p.length; i++) {
+        x += p[i] / (z + i);
+    }
+
+    let t = z + g + 0.5;
+    return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+}
+
+// ---------------- Add Term ----------------
+function addTerm() {
+    const container = document.getElementById("terms-container");
+
+    const termDiv = document.createElement("div");
+    termDiv.className = "term";
+
+    termDiv.innerHTML = `
+        <select class="sign">
+            <option value="+">+</option>
+            <option value="-">-</option>
+        </select>
+
+        <input type="number" class="coeff">
+
+        <span class="x-symbol">x</span>
+
+        <input type="number" class="power" step="any">
+    `;
+
+    container.appendChild(termDiv);
+
+    if (!document.getElementById("add-btn")) {
+        const btn = document.createElement("button");
+        btn.id = "add-btn";
+        btn.className = "add-btn";
+        btn.innerText = "Add Term";
+        btn.onclick = addTerm;
+        container.appendChild(btn);
+    } else {
+        container.appendChild(document.getElementById("add-btn"));
+    }
+}
+
+addTerm();
+
+// ---------------- Format ----------------
+function formatTerm(coeff, power) {
+    if (Math.abs(coeff) < 1e-10) return null;
+
+    let sign = coeff < 0 ? "-" : "+";
+    let absCoeff = Math.abs(coeff);
+
+    let coeffStr = "";
+    if (absCoeff !== 1 || power === 0) {
+        coeffStr = absCoeff.toFixed(4).replace(/\.?0+$/, "");
+    }
+
+    let variable = "";
+    if (power === 0) {
+        variable = "";
+    } else if (power === 1) {
+        variable = "x";
+    } else {
+        variable = "x<sup>" + power.toFixed(4).replace(/\.?0+$/, "") + "</sup>";
+    }
+
+    return { sign, term: coeffStr + variable };
+}
+
+// ---------------- Calculate ----------------
+function calculate() {
+    let order = parseFloat(document.getElementById("order").value);
+    let resultEl = document.getElementById("result");
+
+    if (isNaN(order)) {
+        resultEl.innerHTML = "Enter a valid derivative order.";
+        return;
+    }
+
+    let signs = document.getElementsByClassName("sign");
+    let coeffs = document.getElementsByClassName("coeff");
+    let powers = document.getElementsByClassName("power");
+
+    let resultTerms = [];
+
+    for (let i = 0; i < coeffs.length; i++) {
+        let sign = signs[i].value;
+        let coeff = parseFloat(coeffs[i].value);
+        let power = parseFloat(powers[i].value);
+
+        if (isNaN(coeff) || isNaN(power)) continue;
+
+        if (Math.abs(power) > 140 || Math.abs(coeff) > 100000) {
+            resultEl.innerHTML = "<span style='color:red;'>Read warning at the top of the page</span>";
+            return;
+        }
+
+        if (sign === "-") coeff *= -1;
+
+        // ✅ OMIT INTEGER TERMS
+        if (Number.isInteger(power) && power >= 0 && power < order) {
+            continue;
+        }
+
+        let newCoeff = coeff * gamma(power + 1) / gamma(power - order + 1);
+        let newPower = power - order;
+
+        let formatted = formatTerm(newCoeff, newPower);
+        if (formatted) resultTerms.push(formatted);
+    }
+
+    let output = "";
+
+    resultTerms.forEach((item, index) => {
+        if (index === 0) {
+            output += (item.sign === "-" ? "-" : "") + item.term;
+        } else {
+            output += " " + item.sign + " " + item.term;
+        }
+    });
+
+    // ✅ ADD +C ONLY IF NONZERO RESULT
+    if (order < 0 && output !== "" && output !== "0") {
+        output += " + C";
+    }
+
+    resultEl.innerHTML = output || "0";
+}
+</script>
+
+</body>
+</html>
