@@ -187,7 +187,7 @@ addTerm();
 
 // ---------------- Format ----------------
 function formatTerm(coeff, power) {
-    if (Math.abs(coeff) < 1e-10) return null;
+    if (Math.abs(coeff) < 1e-15) return null;
 
     let sign = coeff < 0 ? "-" : "+";
     let absCoeff = Math.abs(coeff);
