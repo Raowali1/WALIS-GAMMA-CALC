@@ -230,7 +230,10 @@ function calculate() {
         let coeff = parseFloat(coeffs[i].value);
         let power = parseFloat(powers[i].value);
 
-        if (isNaN(coeff) || isNaN(power)) continue;
+        if (isNaN(coeff) || isNaN(power)) {
+            resultEl.innerHTML = "Invalid input detected (non-numeric value).";
+            return;
+        }
 
         if (Math.abs(power) > 140 || Math.abs(coeff) > 100000) {
             resultEl.innerHTML = "<span style='color:red;'>Read warning at the top of the page</span>";
@@ -261,7 +264,7 @@ function calculate() {
         }
     });
 
-    // ✅ ADD +C ONLY IF NONZERO RESULT
+    // ADD +C ONLY IF NONZERO RESULT
     if (order < 0 && output !== "" && output !== "0") {
         output += " + C";
     }
