@@ -14,7 +14,11 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-
+        .warning3 {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
         .math-row {
             display: flex;
             align-items: center;
@@ -95,6 +99,10 @@
 <p class="warning2">
     Warning: Coefficients must be within (-100,000, 100,000)
 </p>
+<p class="warning3">
+    Warning: Exponents can't be Negative integers
+</p>
+
 
 <h2>Fractional Derivative/Integration of a Polynomial</h2>
 
@@ -192,10 +200,10 @@ function formatNumber(num) {
     const abs = Math.abs(num);
 
     if (abs < 1e-4 || abs >= 1e4) {
-        return num.toExponential(5).replace(/\.?0+e/, "e");
+        return num.toExponential(3).replace(/\.?0+e/, "e");
     }
 
-    return num.toFixed(6).replace(/\.?0+$/, "");
+    return num.toFixed(3).replace(/\.?0+$/, "");
 }
 function formatTerm(coeff, power) {
     if (Math.abs(coeff) == 0) return null;
@@ -258,9 +266,10 @@ function calculate() {
 
         if (sign === "-") coeff *= -1;
 
-        // ✅ OMIT INTEGER TERMS
-        if (Number.isInteger(power) && power >= 0 && power < order) {
-            continue;
+        // ✅ OMIT Negative INTEGER TERMS
+        if (Number.isInteger(power) && power <= -1) {
+            resultEl.innerHTML = "<span style='color:red;'>Read warning at the top of the page</span>";
+            return;
         }
 
         let newCoeff = coeff * gamma(power + 1) / gamma(power - order + 1);
@@ -279,7 +288,6 @@ function calculate() {
             output += " " + item.sign + " " + item.term;
         }
     });
-
     // ADD +C ONLY IF NONZERO RESULT
     function buildConstants(order) {
         let n = Math.floor(Math.abs(order));
@@ -305,7 +313,6 @@ function calculate() {
             output += (output ? " + " : "") + constants;
         }
     }
-
     resultEl.innerHTML = output || "0";
 }
 </script>
