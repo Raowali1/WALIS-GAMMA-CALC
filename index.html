@@ -2,7 +2,104 @@
 <html>
 <head>
     <title>Fractional Derivative/Integration of Polynomial Calculator</title>
- 
+ <body>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .tabs {
+        display: flex;
+        background: #111;
+    }
+
+    .tab-button {
+        flex: 1;
+        padding: 14px;
+        cursor: pointer;
+        background: #222;
+        color: white;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+
+    .tab-button.active {
+        background: #444;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 20px;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+</style>
+
+<div class="tabs">
+    <button class="tab-button active" onclick="openTab('calc')">Calculator</button>
+    <button class="tab-button" onclick="openTab('about')">About</button>
+</div>
+
+<!-- CALCULATOR TAB (DEFAULT) -->
+<div id="calc" class="tab-content active">
+
+    <h1>Fractional Derivative and Integration Calculator</h1>
+
+    <!-- 🔽 PUT YOUR EXISTING CALCULATOR UI BELOW THIS LINE -->
+    <p>Your calculator goes here.</p>
+
+</div>
+
+<!-- ABOUT TAB -->
+<div id="about" class="tab-content">
+
+    <h1>About This Tool</h1>
+
+    <p>
+        This is one of the only free online tools focused specifically on fractional derivatives and fractional integration of polynomial functions.
+        It is designed to make advanced calculus operations more accessible without requiring paid software or installations.
+    </p>
+
+    <h2>Why This Exists</h2>
+
+    <p>
+        Fractional calculus tools are often limited, overly complex, or locked behind paid software.
+        This tool is designed to keep things simple and accessible.
+    </p>
+
+    <h2>Features</h2>
+
+    <ul>
+        <li>Fractional derivatives</li>
+        <li>Fractional integration</li>
+        <li>Fast browser-based calculations</li>
+        <li>No signup or installation</li>
+    </ul>
+
+</div>
+
+<script>
+function openTab(tabName) {
+    const tabs = document.querySelectorAll(".tab-content");
+    const buttons = document.querySelectorAll(".tab-button");
+
+    tabs.forEach(t => t.classList.remove("active"));
+    buttons.forEach(b => b.classList.remove("active"));
+
+    document.getElementById(tabName).classList.add("active");
+
+    // highlight active button
+    event.target.classList.add("active");
+}
+</script>
+
+</body>
     <style>
         .warning {
             color: red;
