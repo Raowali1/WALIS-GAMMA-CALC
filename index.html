@@ -186,24 +186,40 @@ function addTerm() {
 addTerm();
 
 // ---------------- Format ----------------
+function formatNumber(num) {
+    if (num === 0) return "0";
+
+    const abs = Math.abs(num);
+
+    if (abs < 1e-4 || abs >= 1e4) {
+        return num.toExponential(5).replace(/\.?0+e/, "e");
+    }
+
+    return num.toFixed(6).replace(/\.?0+$/, "");
+}
 function formatTerm(coeff, power) {
-    if (Math.abs(coeff) < 1e-15) return null;
+    if (Math.abs(coeff) == 0) return null;
 
     let sign = coeff < 0 ? "-" : "+";
     let absCoeff = Math.abs(coeff);
 
+    let formattedCoeff = formatNumber(absCoeff);
+
     let coeffStr = "";
+
     if (absCoeff !== 1 || power === 0) {
-        coeffStr = absCoeff.toFixed(4).replace(/\.?0+$/, "");
+        coeffStr = formattedCoeff;
     }
 
     let variable = "";
+
     if (power === 0) {
         variable = "";
     } else if (power === 1) {
         variable = "x";
-    } else {
-        variable = "x<sup>" + power.toFixed(4).replace(/\.?0+$/, "") + "</sup>";
+    }else {
+        const formattedPower = formatNumber(power);
+        variable = "x<sup>" + formattedPower + "</sup>";
     }
 
     return { sign, term: coeffStr + variable };
@@ -265,8 +281,29 @@ function calculate() {
     });
 
     // ADD +C ONLY IF NONZERO RESULT
+    function buildConstants(order) {
+        let n = Math.floor(Math.abs(order));
+        let parts = [];
+
+        for (let i = 0; i < n; i++) {
+            let c = "C<sub>" + (i + 1) + "</sub>";
+
+            if (i === 0) {
+                parts.push(c);
+            } else if (i === 1) {
+                parts.push(c + "x");
+            } else {
+                parts.push(c + "x<sup>" + i + "</sup>");
+            }
+        }
+        return parts.join(" + ");
+    }
+    // ADD POLYNOMIAL CONSTANTS FOR INTEGRATION
     if (order < 0 && output !== "" && output !== "0") {
-        output += " + C";
+        let constants = buildConstants(order);
+        if (constants) {
+            output += (output ? " + " : "") + constants;
+        }
     }
 
     resultEl.innerHTML = output || "0";
