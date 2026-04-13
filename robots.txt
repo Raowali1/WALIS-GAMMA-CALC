@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://raowali1.github.io/sitemap.xml
+Sitemap: https://raowali1.github.io/WALIS-GAMMA-CALC/sitemap.xml
