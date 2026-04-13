@@ -109,6 +109,7 @@
         
         .tab-content {
             display: none;
+            padding: 20px;
         }
         
         .tab-content.active {
@@ -117,12 +118,12 @@
     </style>
 </head>
 <script>
-function openTab(tab) {
+function openTab(tab, event) {
     document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
     document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
 
     document.getElementById(tab).classList.add("active");
-    event.target.classList.add("active");
+    event.currentTarget.classList.add("active");
 }
 </script>
 <body>
