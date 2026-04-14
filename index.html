@@ -266,7 +266,7 @@ function formatNumber(num) {
     const abs = Math.abs(num);
 
     if (abs <= 1e-3 || abs >= 1e4) {
-        return num.toExponential(4).replace(/\.?0+e/, "e");
+        return num.toExponential(3).replace(/\.?0+e/, "e");
     }
 
     return num.toFixed(4).replace(/\.?0+$/, "");
