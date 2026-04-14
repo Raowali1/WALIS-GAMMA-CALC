@@ -265,11 +265,11 @@ function formatNumber(num) {
 
     const abs = Math.abs(num);
 
-    if (abs < 1e-5 || abs >= 1e5) {
-        return num.toExponential(3).replace(/\.?0+e/, "e");
+    if (abs <-= 1e-3 || abs >= 1e4) {
+        return num.toExponential(4).replace(/\.?0+e/, "e");
     }
 
-    return num.toFixed(3).replace(/\.?0+$/, "");
+    return num.toFixed(4).replace(/\.?0+$/, "");
 }
 function formatTerm(coeff, power) {
     if (Math.abs(coeff) == 0) return null;
