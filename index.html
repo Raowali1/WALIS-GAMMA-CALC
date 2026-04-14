@@ -128,10 +128,10 @@ function openTab(tab, event) {
 </script>
 <body>
 <div class="tabs">
-    <button class="tab-button active" onclick="openTab('calc')">Calculator</button>
-    <button class="tab-button" onclick="openTab('about')">About</button>
+    <button class="tab-button active" onclick="openTab('calc', event)">Calculator</button>
+    <button class="tab-button" onclick="openTab('tutorial', event)">Tutorial</button>
+    <button class="tab-button" onclick="openTab('about', event)">About</button>
 </div>
-
 <div id="calc" class="tab-content active">
 <h2>Fractional Derivative/Integration of a Polynomial</h2>
 <p class="warning">
@@ -163,6 +163,14 @@ function openTab(tab, event) {
 
 <h3 id="result"></h3>
 </div>
+<div id="tutorial" class="tab-content">
+    <h2>How to Use the Calculator</h2>
+
+    <p>Follow these steps to compute fractional derivatives or integrals:</p>
+
+    <img src="tutorial.png" alt="Tutorial guide" style="max-width:100%; height:auto; border:1px solid #ccc;">
+</div>
+
 <div id="about" class="tab-content">
 
 <h1>About This Tool</h1>
