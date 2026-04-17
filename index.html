@@ -337,7 +337,12 @@ function calculate() {
             resultEl.innerHTML = "<span style='color:red;'>Read warning at the top of the page</span>";
             return;
         }
-
+        // ✅ Whole-number derivative rule: term becomes 0
+        if (Number.isInteger(order) && order > 0) {
+            if (Number.isInteger(power) && power >= 0 && power < order) {
+                continue; // skip term entirely (it becomes 0)
+            }
+        }
         let newCoeff = coeff * gamma(power + 1) / gamma(power - order + 1);
         let newPower = power - order;
 
